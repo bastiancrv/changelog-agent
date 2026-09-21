@@ -9,4 +9,3 @@ changelog = "1.0.0 - Version initiale"
 
 [docker]
 dockerfile = "./Dockerfile"
- 
