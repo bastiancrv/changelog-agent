@@ -7,25 +7,11 @@ Agent IA qui lit l'historique git d'un dépôt **local** et génère un `CHANGEL
 - git
 - Une clé API Gemini gratuite : https://aistudio.google.com/apikey
 
-## Installation avec Odin
-```bash
-odin install changelog-agent
-odin keys set GEMINI_API_KEY
-```
-
-## Utilisation
-```bash
-# Depuis le dossier d'un dépôt git
-odin run changelog-agent --task "Changelog en anglais"
-odin run changelog-agent --dry-run
-```
-
 ## Utilisation sans Odin
 ```bash
 pip install -r requirements.txt
-export GEMINI_API_KEY=ta_cle
 python agent.py --dry-run
-python agent.py --commits 10 --task "Changelog en anglais"
+python agent.py --commits 10 [Optional] >> --task "Changelog en anglais"
 ```
 
 ## Options
