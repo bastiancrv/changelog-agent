@@ -3,16 +3,30 @@ import argparse
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 from google import genai
 from google.genai import types
 
-MODEL = "gemini-2.5-flash"  # à adapter selon les modèles visibles dans Google AI Studio
+MODEL = "gemini-3.6-flash"  # à adapter selon les modèles visibles dans Google AI Studio
 
 SYSTEM_PROMPT = (
     "Tu rédiges des changelogs clairs et concis, en Markdown, "
     "groupés par sections : Ajouts / Corrections / Autres."
 )
+
+
+def load_env_file() -> None:
+    """Charge un fichier .env (dossier courant, puis dossier de l'agent) sans écraser l'existant."""
+    for path in (Path.cwd() / ".env", Path(__file__).resolve().parent / ".env"):
+        if not path.is_file():
+            continue
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
 def get_git_log(n: int) -> str:
@@ -45,6 +59,7 @@ def main() -> None:
         print(f"  - écrire le résultat dans {args.output}")
         return
 
+    load_env_file()
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         sys.exit("Erreur : la variable d'environnement GEMINI_API_KEY n'est pas définie.")
